@@ -1,5 +1,6 @@
 package com.motohana.assistant
 
+import androidx.activity.compose.setContent
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -31,7 +32,15 @@ class MainActivity : AppCompatActivity() {
      if (!ok) done(null) else LocationServices.getFusedLocationProviderClient(this).getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { l -> done(l?.let { "${it.latitude},${it.longitude}" }) }.addOnFailureListener { done(null) }
     },
     send = { number, slot, text ->
-     if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) { askPermissions(); return@Home }
+     if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+    permissionLauncher.launch(
+        arrayOf(
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.READ_PHONE_STATE
+        )
+    )
+    return@Home
+}
      val subs = try { getSystemService(android.telephony.SubscriptionManager::class.java).activeSubscriptionInfoList } catch (_: Exception) { null }
      val id = subs?.firstOrNull { it.simSlotIndex == slot }?.subscriptionId
      if (id == null) android.widget.Toast.makeText(this, "تعذر العثور على الشريحة المحددة", android.widget.Toast.LENGTH_LONG).show()
