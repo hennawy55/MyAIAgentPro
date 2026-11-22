@@ -1,4 +1,5 @@
-name: Build Moto Hana APK
+
+name: Build Android APK
 
 on:
   workflow_dispatch:
@@ -11,6 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -23,23 +25,19 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platform-tools
+            platforms;android-35
+            build-tools;35.0.0
 
-      - name: Grant execute permission
-        run: chmod +x gradlew
-        continue-on-error: true
-
-      - name: Build debug APK
+      - name: Build APK
         run: |
-          if [ -f ./gradlew ]; then
-            ./gradlew assembleDebug
-          else
-            echo "Gradle wrapper is missing. Add gradlew and gradle/wrapper files or generate them with Android Studio."
-            exit 1
-          fi
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MotoHana-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
