@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         scroll.addView(content)
         setContentView(scroll)
         val name = prefs.getString("assistant_name", "موتو حنا") ?: "موتو حنا"
-        titleText(name, 28)
+        titleText(name, 28f)
         subtitle("مساعد شخصي محلي — البيانات محفوظة على الهاتف")
         section("الرئيسية")
         button("إعداد اسم المساعد") { editAssistantName() }
