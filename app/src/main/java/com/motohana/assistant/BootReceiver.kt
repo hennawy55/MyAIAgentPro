@@ -1,5 +1,11 @@
 package com.motohana.assistant
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-class BootReceiver : BroadcastReceiver() { override fun onReceive(context: Context, intent: Intent?) { /* إعادة جدولة المهام ستضاف مع قاعدة البيانات */ } }
+
+class BootReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent?) {
+        if (intent?.action == Intent.ACTION_BOOT_COMPLETED) ReminderStore.restore(context)
+    }
+}
